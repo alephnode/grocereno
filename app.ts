@@ -1,15 +1,14 @@
-import { config } from "https://deno.land/x/dotenv/mod.ts";
+import { Application } from "https://deno.land/x/oak/mod.ts";
+import "./config.ts";
+import router from "./router.ts";
 
-config({ export: true });
+const app = new Application();
+const APP_PORT = Deno.env.get("APP_PORT");
+const APP_HOST = Deno.env.get("APP_HOST");
 
-const airTableUrl = Deno.env.get("AIRTABLE_API_URL") || "";
-const airTableApiKey = Deno.env.get("AIRTABLE_API_KEY") || "";
+app.use(router.routes());
+app.use(router.allowedMethods());
 
-const res = await fetch(airTableUrl, {
-  headers: {
-    "Authorization": `Bearer ${airTableApiKey}`,
-  },
-});
+console.log(`Listening on ${APP_PORT}...`);
 
-const body = new Uint8Array(await res.arrayBuffer());
-await Deno.stdout.write(body);
+await app.listen(`${APP_HOST}:${APP_PORT}`);
