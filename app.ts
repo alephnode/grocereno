@@ -4,10 +4,10 @@ import "./config.ts";
 import router from "./router.ts";
 
 const app = new Application();
-app.use(oakCors());
 const APP_PORT = Deno.env.get("APP_PORT");
 const APP_HOST = Deno.env.get("APP_HOST");
 
+app.use(oakCors());
 app.use(router.routes());
 app.use(router.allowedMethods());
 
